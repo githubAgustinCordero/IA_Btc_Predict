@@ -7,7 +7,7 @@ using CsvHelper;
 namespace ConsoleApp1
 {
     class Conversor
-    {        
+    {
         public void ConvertirFechasCSV(string archivoEntrada, string archivoSalida)
         {
             var listaDatosSalida = new List<DatosSalida>();
@@ -23,13 +23,25 @@ namespace ConsoleApp1
 
                     var fechaUnix = ConvertirFechaUnix(fecha);
 
+                    var price = registro.Price.Split(".");
+                    var market_cap = registro.Market_Cap.Split(".");
+                    if (market_cap[0] == "")
+                    {
+                        market_cap[0] = "0";
+                    }
+                    
+                    var totalVolume = registro.Total_Volume.Split(".");
+
+
                     listaDatosSalida.Add(new DatosSalida
                     {
                         Date = fechaUnix,
-                        Price = registro.Price,
-                        Market_Cap = registro.Market_Cap,
-                        Total_Volume = registro.Total_Volume
+                        Price = int.Parse(price[0]),
+                        Market_Cap = long.Parse(market_cap[0]),
+                        Total_Volume = long.Parse(totalVolume[0])
                     });
+                    
+                    
                 }
             }
 
@@ -57,9 +69,9 @@ namespace ConsoleApp1
         public class DatosSalida
         {
             public long Date { get; set; }
-            public string Price { get; set; }
-            public string Market_Cap { get; set; }
-            public string Total_Volume { get; set; }
+            public int Price { get; set; }
+            public long Market_Cap { get; set; }
+            public long Total_Volume { get; set; }
         }
     }
 }

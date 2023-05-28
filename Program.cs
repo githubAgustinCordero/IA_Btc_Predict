@@ -106,17 +106,17 @@ namespace ConsoleApp1
         public float Date;
 
         [LoadColumn(1)]
-        public float Label; //Price
+        public Single Label; //Price
 
         [LoadColumn(2)]
-        public float Markect_Cap;
+        public Single Markect_Cap;
 
         [LoadColumn(3)]
-        public float Total_Volume;
+        public Single Total_Volume;
 
     }
     public class BitcoinPricePrediction
     {
-        public float Score;
+        public Single Score;
     }
 }
