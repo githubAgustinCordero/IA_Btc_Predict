@@ -5,4 +5,6 @@ Tecnologías:
 - .Net 6.0
 - ml.net 2.0.1
 
-Datos obtenidos de:  https://www.kaggle.com/datasets/mczielinski/bitcoin-historical-data
+Datos obtenidos de:  
+- https://www.kaggle.com/datasets/mczielinski/bitcoin-historical-data
+- https://cryptocointracker.com/api/coingecko-price-history

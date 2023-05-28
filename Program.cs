@@ -8,34 +8,46 @@ namespace ConsoleApp1
         static void Main()
         {
             MLContext mlContext = new MLContext();
-            string fileName = "btc_prices.csv";
+            //string fileName = "btc_prices.csv";
+            string entrada = "btc_2015_al_2023.csv";
+            string salida = "btc_prices_temp.csv";
 
-            var lines = File.ReadLines(fileName)
+            Conversor conversorFechas = new Conversor();
+            conversorFechas.ConvertirFechasCSV(entrada, salida);
+
+            var lines = File.ReadLines(salida)
                 .Where(line => !line.Contains("NaN"))
                 .ToArray();
 
-            string tempFileName = "btc_prices_temp.csv";
-            File.WriteAllLines(tempFileName, lines);
+            //string tempFileName = "btc_prices_temp.csv";
+            File.WriteAllLines(salida, lines);
 
-            var dataView = mlContext.Data.LoadFromTextFile<BitcoinPrice>(tempFileName, ',', true);
+            //var dataView = mlContext.Data.LoadFromTextFile<btc_prices>(tempFileName, ',', true);
+            var dataView = mlContext.Data.LoadFromTextFile<btc_2015_al_2023>(salida, ',', true);
 
-            var dataPipeline = mlContext.Transforms.Concatenate("Features", 
-                                                                nameof(BitcoinPrice.Timestamp), 
-                                                                //nameof(BitcoinPrice.Open), 
-                                                                //nameof(BitcoinPrice.High), 
-                                                                //nameof(BitcoinPrice.Low), 
-                                                                nameof(BitcoinPrice.Close)
-                                                                //nameof(BitcoinPrice.Volume_BTC), 
-                                                                //nameof(BitcoinPrice.Volume_Currency),
-                                                                /*nameof(BitcoinPrice.Label)*/)
-                .Append(mlContext.Transforms.NormalizeMinMax("Features"))
+            //var dataPipeline = mlContext.Transforms.Concatenate("Features", 
+            //                                                    nameof(btc_prices.Timestamp), 
+            //                                                    //nameof(BitcoinPrice.Open), 
+            //                                                    //nameof(BitcoinPrice.High), 
+            //                                                    //nameof(BitcoinPrice.Low), 
+            //                                                    nameof(btc_prices.Close)
+            //                                                    //nameof(BitcoinPrice.Volume_BTC), 
+            //                                                    //nameof(BitcoinPrice.Volume_Currency),
+            //                                                    /*nameof(BitcoinPrice.Label)*/)
+
+            var dataPipeline = mlContext.Transforms.Concatenate("Features",
+                                                                nameof(btc_2015_al_2023.Date),
+                                                                nameof(btc_2015_al_2023.Label),
+                                                                nameof(btc_2015_al_2023.Markect_Cap),
+                                                                nameof(btc_2015_al_2023.Total_Volume))
+    .Append(mlContext.Transforms.NormalizeMinMax("Features"))
                 .Append(mlContext.Regression.Trainers.Sdca());
 
             var model = dataPipeline.Fit(dataView);
-            var predictionEngine = mlContext.Model.CreatePredictionEngine<BitcoinPrice, BitcoinPricePrediction>(model);
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<btc_2015_al_2023, BitcoinPricePrediction>(model);
 
             // Crear una fecha local
-            DateTime localDateTime = new DateTime(2020, 5, 16);
+            DateTime localDateTime = new DateTime(2023, 1, 2);
 
             // Convertir la fecha local a DateTimeOffset
             DateTimeOffset dateTimeOffset = new DateTimeOffset(localDateTime);
@@ -43,20 +55,23 @@ namespace ConsoleApp1
             // Convertir DateTimeOffset a tiempo Unix
             long unixTime = dateTimeOffset.ToUnixTimeSeconds();
 
-            var sampleData = new BitcoinPrice { Timestamp = unixTime };
+            //var sampleData = new btc_prices { Timestamp = unixTime };
+            var sampleData = new btc_2015_al_2023 { Date = unixTime };
 
             var prediction = predictionEngine.Predict(sampleData);
 
             // Convertir la fecha Unix a DateTime
-            dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds((long)sampleData.Timestamp);
+            //dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds((long)sampleData.Timestamp);
+            dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds((long)sampleData.Date);
             localDateTime = dateTimeOffset.LocalDateTime;
 
+            //Console.WriteLine($"El precio predicho para el {localDateTime} es: {prediction.Score}");
             Console.WriteLine($"El precio predicho para el {localDateTime} es: {prediction.Score}");
             Console.ReadLine();
         }
     }
 
-    public class BitcoinPrice
+    public class btc_prices
     {
         [LoadColumn(0)]
         public float Timestamp;
@@ -83,6 +98,23 @@ namespace ConsoleApp1
         public float Label;
     }
 
+
+    //Date,Price,Market cap,Total volume
+    public class btc_2015_al_2023
+    {
+        [LoadColumn(0)]
+        public float Date;
+
+        [LoadColumn(1)]
+        public float Label; //Price
+
+        [LoadColumn(2)]
+        public float Markect_Cap;
+
+        [LoadColumn(3)]
+        public float Total_Volume;
+
+    }
     public class BitcoinPricePrediction
     {
         public float Score;
