@@ -37,7 +37,7 @@ namespace ConsoleApp1
 
             var dataPipeline = mlContext.Transforms.Concatenate("Features",
                                                                 nameof(btc_2015_al_2023.Date),
-                                                                nameof(btc_2015_al_2023.Label),
+                                                                //nameof(btc_2015_al_2023.Label),
                                                                 nameof(btc_2015_al_2023.Markect_Cap),
                                                                 nameof(btc_2015_al_2023.Total_Volume))
     .Append(mlContext.Transforms.NormalizeMinMax("Features"))
@@ -47,7 +47,7 @@ namespace ConsoleApp1
             var predictionEngine = mlContext.Model.CreatePredictionEngine<btc_2015_al_2023, BitcoinPricePrediction>(model);
 
             // Crear una fecha local
-            DateTime localDateTime = new DateTime(2023, 1, 2);
+            DateTime localDateTime = new DateTime(2024, 5, 16); // año, mes, dia
 
             // Convertir la fecha local a DateTimeOffset
             DateTimeOffset dateTimeOffset = new DateTimeOffset(localDateTime);
@@ -56,7 +56,17 @@ namespace ConsoleApp1
             long unixTime = dateTimeOffset.ToUnixTimeSeconds();
 
             //var sampleData = new btc_prices { Timestamp = unixTime };
-            var sampleData = new btc_2015_al_2023 { Date = unixTime };
+            var sampleData = new btc_2015_al_2023 { 
+                Date = unixTime,
+                Markect_Cap = 523846408825,
+                Total_Volume = 12732238815
+            };
+
+            //conclusiones:
+            // es necesario tener antes el valor de marketcap, para luego ingresarlo para obtener un precio
+            // ideal seria tener tambien una prediccion del volumen, así como de datos pero clasificados por cada halving
+            // incluso los valores de monedas en circulacion
+            
 
             var prediction = predictionEngine.Predict(sampleData);
 
