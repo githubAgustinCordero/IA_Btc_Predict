@@ -9,7 +9,7 @@ namespace ConsoleApp1
         {
             MLContext mlContext = new MLContext();
             //string fileName = "btc_prices.csv";
-            string entrada = "2012_2016_Halving.csv";
+            string entrada = "2012_2020_Halving.csv";
             string salida = "btc_prices_temp.csv";
 
             Conversor conversorFechas = new Conversor();
@@ -39,7 +39,8 @@ namespace ConsoleApp1
                                                                 nameof(btc_2015_al_2023.Date),
                                                                 //nameof(btc_2015_al_2023.Label),
                                                                 nameof(btc_2015_al_2023.Markect_Cap),
-                                                                nameof(btc_2015_al_2023.Total_Volume))
+                                                                nameof(btc_2015_al_2023.Total_Volume)
+                                                                )
     .Append(mlContext.Transforms.NormalizeMinMax("Features"))
                 .Append(mlContext.Regression.Trainers.Sdca());
 
@@ -47,7 +48,7 @@ namespace ConsoleApp1
             var predictionEngine = mlContext.Model.CreatePredictionEngine<btc_2015_al_2023, BitcoinPricePrediction>(model);
 
             // Crear una fecha local
-            DateTime localDateTime = new DateTime(2023, 5, 16); // año, mes, dia
+            DateTime localDateTime = new DateTime(2023, 5, 29); // año, mes, dia
 
             // Convertir la fecha local a DateTimeOffset
             DateTimeOffset dateTimeOffset = new DateTimeOffset(localDateTime);
