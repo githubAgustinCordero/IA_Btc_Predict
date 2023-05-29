@@ -9,7 +9,7 @@ namespace ConsoleApp1
         {
             MLContext mlContext = new MLContext();
             //string fileName = "btc_prices.csv";
-            string entrada = "2013_2023.csv";
+            string entrada = "2012_2016_Halving.csv";
             string salida = "btc_prices_temp.csv";
 
             Conversor conversorFechas = new Conversor();
@@ -41,14 +41,18 @@ namespace ConsoleApp1
                                                                 nameof(btc_2015_al_2023.Markect_Cap),
                                                                 nameof(btc_2015_al_2023.Total_Volume)
                                                                 )
-    .Append(mlContext.Transforms.NormalizeMinMax("Features"))
+                .Append(mlContext.Transforms.NormalizeMinMax("Features"))
                 .Append(mlContext.Regression.Trainers.Sdca());
 
             var model = dataPipeline.Fit(dataView);
             var predictionEngine = mlContext.Model.CreatePredictionEngine<btc_2015_al_2023, BitcoinPricePrediction>(model);
 
             // Crear una fecha local
-            DateTime localDateTime = new DateTime(2023, 5, 29); // año, mes, dia
+            DateTime localDateTime = new DateTime(2023, 01, 01); // año, mes, dia
+            // 2016-11-28 
+            // 2017-05-29 02:00,2286.2663,37402630788.11,312368211.91593516
+            // 2020-01-01 01:00,7195.153895430029,130394101535.60994,21187883711.18498
+            // 2023-01-01 01:00,16540.693624776803,318278329991.7019,12013247678.029587
 
             // Convertir la fecha local a DateTimeOffset
             DateTimeOffset dateTimeOffset = new DateTimeOffset(localDateTime);
@@ -59,8 +63,8 @@ namespace ConsoleApp1
             //var sampleData = new btc_prices { Timestamp = unixTime };
             var sampleData = new btc_2015_al_2023 { 
                 Date = unixTime,
-                Markect_Cap = 523846408825,
-                Total_Volume = 12732238815
+                Markect_Cap = 318278329991,
+                Total_Volume = 12013247678
             };
 
             //conclusiones:
@@ -108,7 +112,6 @@ namespace ConsoleApp1
         [LoadColumn(7)]
         public float Label;
     }
-
 
     //Date,Price,Market cap,Total volume
     public class btc_2015_al_2023

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Formats.Asn1;
-using System.Globalization;
+﻿using System.Globalization;
 using CsvHelper;
 
 namespace ConsoleApp1
