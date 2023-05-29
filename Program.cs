@@ -9,7 +9,7 @@ namespace ConsoleApp1
         {
             MLContext mlContext = new MLContext();
             //string fileName = "btc_prices.csv";
-            string entrada = "2012_2020_Halving.csv";
+            string entrada = "2013_2023.csv";
             string salida = "btc_prices_temp.csv";
 
             Conversor conversorFechas = new Conversor();

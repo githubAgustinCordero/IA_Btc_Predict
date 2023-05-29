@@ -19,6 +19,9 @@
     <None Update="2012_2020_Halving.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="2013_2023.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="AgeRanges.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
