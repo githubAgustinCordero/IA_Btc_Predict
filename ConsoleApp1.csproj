@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="2012_2016_Halving.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="AgeRanges.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
